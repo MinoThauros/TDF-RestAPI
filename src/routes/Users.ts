@@ -1,16 +1,14 @@
+import { create } from "domain";
 import { Router, Response, Request } from "express";
+import { borrowBook, createUser, deleteUser, getUserById, getUsers, returnBook, updateUser } from "../controllers/UsersController.js";
+import { get } from "http";
 
 const UserRouter = Router();
 
 
 UserRouter.route("/")
-.get((req: Request, res: Response) => {
-    res.send("Retrieve a list of all users");
-})
-.post((req: Request, res: Response) => {
-    res.send("Register a new user");
-    //keep in mind that mongoose will create the id for us
-})
+.get(getUsers)
+.post(createUser)
 
 /* 
 .delete((req: Request, res: Response) => {
@@ -22,26 +20,16 @@ UserRouter.route("/")
 //user specific routes/actions
 //route is now /users/:id
 UserRouter.route("/:id")
-.get((req: Request, res: Response) => {
-    res.send(`Retrieving data of user with id ${req.params.id}`);//getting the id from the url
-})
+.get(getUserById)
 
-.put((req: Request, res: Response) => {
-    res.send(`Editing user with id ${req.params.id}`);//getting the id from the url
-})
-.delete((req: Request, res: Response) => {
-    res.send(`Deleting user with id ${req.params.id}`);
-})
+.put(updateUser)
+.delete(deleteUser)
 
 UserRouter.route("/:id/borrow/:bookId")
-.put((req: Request, res: Response) => {
-    res.send(`User with id ${req.params.id} is borrowing book with id ${req.params.bookId}`);
-})
+.put(borrowBook)
 
 UserRouter.route("/:id/return/:bookId")
-.put((req: Request, res: Response) => {
-    res.send(`User with id ${req.params.id} is returning book with id ${req.params.bookId}`);
-})
+.put(returnBook)
 
 
 

@@ -1,22 +1,33 @@
-import express, { Express, Response, Request } from 'express';
-import DBConnect from './db/db.js'
+import express, { Express, Response, Request, NextFunction, ErrorRequestHandler  } from 'express';
+import {MongoDBClient, connectDB} from './db/db.js'
 import 'dotenv/config'
-import UsersRouter from './routes/Users.js'
+import UsersRouter from './routes/Users.js'//instead of using require we use import
+
+
 
 const port = 3000;
 const app: Express = express();
 
+connectDB()
 
+//app.use(connectDB)
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
-DBConnect();
+
 
 app.get('/', (req:Request, res: Response) => {
     res.send('Welcome to your first API')
 })
 //we could keep adding routes here but we will use a router instead
 
-app.use('/users', UsersRouter)
+app.use('/users', UsersRouter)//pass route instance to app.use
 
+app.use((err:ErrorRequestHandler, req:Request, res:Response, next:NextFunction):any => {
+    console.log(err)
+    res.status(500).json({...err})
+    process.exit(1)
+})
 
 app.listen(port, ()=>console.log(`server started on port ${port}`))
+
+
