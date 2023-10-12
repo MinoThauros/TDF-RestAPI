@@ -1,7 +1,7 @@
 //simply copy implementations from front end
 
 import axios,{ AxiosError, AxiosResponse } from "axios";
-import { SignInResponsePayload, AuthRequestPayloadArgs } from "../AuthTypes.js";
+import { SignInResponsePayload, AuthRequestPayloadArgs, VerifyTokenResponse } from "../AuthTypes.js";
 
 export class AuthInterface{
     private readonly  API_KEY:string=process.env.EXPO_PUBLIC_FIREBASE_API_KEY as string;
@@ -26,6 +26,12 @@ export class AuthInterface{
             returnSecureToken:true
             //ask backend to return token; if token is returned, we know that the login was successful
             }as AuthRequestPayloadArgs)  
+    }
+
+    verifyToken=async ({idToken}:{idToken:string})=>{
+        return await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${this.API_KEY}`,{
+            idToken
+        }) as AxiosResponse<VerifyTokenResponse, AxiosError>
     }
 
 }

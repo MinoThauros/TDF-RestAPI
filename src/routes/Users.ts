@@ -1,7 +1,6 @@
 import { create } from "domain";
 import { Router, Response, Request } from "express";
 import { borrowBook, createUser, deleteUser, getUserById, getUsers, returnBook, updateUser } from "../controllers/UsersController.js";
-import { get } from "http";
 
 const UserRouter = Router();
 

@@ -2,6 +2,7 @@ import express, { Express, Response, Request, NextFunction, ErrorRequestHandler 
 import {MongoDBClient, connectDB} from './db/db.js'
 import 'dotenv/config'
 import UsersRouter from './routes/Users.js'//instead of using require we use import
+import LoginRouter from './routes/Login.js';
 
 
 
@@ -20,7 +21,9 @@ app.get('/', (req:Request, res: Response) => {
 })
 //we could keep adding routes here but we will use a router instead
 
-app.use('/users', UsersRouter)//pass route instance to app.use
+app.use('/users',UsersRouter)//pass route instance to app.use
+
+app.use('/login',LoginRouter)
 
 app.use((err:ErrorRequestHandler, req:Request, res:Response, next:NextFunction):any => {
     console.log(err)

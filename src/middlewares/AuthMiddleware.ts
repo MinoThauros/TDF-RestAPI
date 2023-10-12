@@ -1,16 +1,41 @@
 import { NextFunction, Request, Response } from "express";
+import { AuthInterface } from "../utils/authUtils.js";
+import { connectDB } from "../db/db.js";
+const clientDB=await connectDB()
 
-const Authenticator = (req: Request, res: Response, next: NextFunction) => {
-    //authflow: autenticated users have a token in their header
-    //if they do, we identify them to make sure they exist and pass to next middleware
-    let token
-    if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
-        token = req.headers.authorization.split(" ")[1]
-        //verify token
-        //if token is valid, we pass to next middleware
-        //else we send a 401 unauthorized
+export const Guard = async (req: Request, res: Response, next: NextFunction) => {
+    const { verifyToken } = new AuthInterface();
+    const idToken = req.query.auth as string;
+
+    try {
+        // Check if idToken is present
+        if (!idToken) {
+            throw new Error('ID Token is missing');
+        }
+
+        // Verify the token
+        const { data } = await verifyToken({ idToken });
+
+        // Check if the data exists
+        if (!data) {
+            throw new Error('Token verification failed');
+        }
+
+        // Fetch user details and attach to the request body
+        req.body.user = clientDB.db("BookBorrowing").collection("Users").findOne({ email: data.email } as any);
+
+        // Move to next middleware or route
+        next();
+    } catch (err) {
+        console.error(err);
+        next(err);
+        //pass error to error handler
+        //wouldnt need to do this if we had a global error handler (expess asYNC HANDLER)
     }
-    //if no token, we send a 401 unauthorized
-    //we dont handle here the creation of a new token nor new account s
-
 }
+
+/*
++ Manage identity with firebase
++ Manage user profile data with MongoDB
+//reference system design document on excallidraw
+*/
