@@ -15,6 +15,7 @@ export const Guard = async (req: Request, res: Response, next: NextFunction) => 
 
         // Verify the token
         const { data } = await verifyToken({ idToken });
+        //axios has a data property that contains the response body if no error is thrown ?
 
         // Check if the data exists
         if (!data) {
