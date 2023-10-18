@@ -3,6 +3,7 @@ import {MongoDBClient, connectDB} from './db/db.js'
 import 'dotenv/config'
 import UsersRouter from './routes/Users.js'//instead of using require we use import
 import LoginRouter from './routes/Login.js';
+import SignUpRouter from './routes/SignUp.js';
 
 
 
@@ -25,10 +26,11 @@ app.use('/users',UsersRouter)//pass route instance to app.use
 
 app.use('/login',LoginRouter)
 
+app.use('/signup',SignUpRouter)
+
 app.use((err:ErrorRequestHandler, req:Request, res:Response, next:NextFunction):any => {
     console.log(err)
     res.status(500).json({...err})
-    process.exit(1)
 })
 
 app.listen(port, ()=>console.log(`server started on port ${port}`))

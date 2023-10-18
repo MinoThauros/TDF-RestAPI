@@ -17,7 +17,7 @@ export const createUser= async (req: Request, res: Response, next:NextFunction) 
 }
 
 /**
- * Fetches all users from the database
+ * Fetches all users (profiles) from the database
  */
 export const getUsers= async (req: Request, res: Response, next:NextFunction) => {
     try{
